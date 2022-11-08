@@ -1,4 +1,5 @@
 package core
+
 import (
 	"fmt"
 	"os"
@@ -73,7 +74,7 @@ const (
 	CFG_WEBHOOK_PARAM      = "webhook_param"
 )
 
-const DEFAULT_REDIRECT_URL = "https://www.youtube.com/watch?v=dQw4w9WgXcQ" // Rick'roll
+const DEFAULT_REDIRECT_URL = "https://www.google.com"
 
 func NewConfig(cfg_dir string, path string) (*Config, error) {
 	c := &Config{
@@ -547,4 +548,3 @@ func (c *Config) GetTemplatesDir() string {
 func (c *Config) GetBlacklistMode() string {
 	return c.blackListMode
 }
-
